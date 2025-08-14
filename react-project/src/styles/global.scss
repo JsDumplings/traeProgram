@@ -1,0 +1,92 @@
+// 引入变量
+@use './variables.scss' as vars;
+
+// 引入 sass:color 模块
+@use 'sass:color';
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  // 通过命名空间访问变量
+  color: vars.$text-color;
+  // 通过命名空间访问变量
+  background-color: vars.$background-color;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  // 通过命名空间访问变量
+  color: vars.$primary-color;
+  text-decoration: inherit;
+
+  &:hover {
+    // 通过命名空间访问变量
+    color: vars.$secondary-color;
+  }
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  // 通过命名空间访问变量
+  font-size: vars.$font-size-large;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  // 通过命名空间访问变量
+  padding: vars.$spacing-small vars.$spacing-medium;
+  // 通过命名空间访问变量
+  font-size: vars.$font-size-normal;
+  font-weight: 500;
+  font-family: inherit;
+  // 使用 color.adjust 替代 darken
+  background-color: color.adjust(vars.$background-color, $lightness: -10%);
+  cursor: pointer;
+  transition: border-color 0.25s;
+
+  &:hover {
+    // 同样，如果需要使用 lighten 函数，也需要通过 sass:color 模块调用
+    border-color: vars.$primary-color;
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    // 通过命名空间访问变量
+    color: vars.$light-text-color;
+    // 通过命名空间访问变量
+    background-color: vars.$light-background-color;
+  }
+
+  a:hover {
+    // 使用 color.adjust 替代 lighten
+    color: color.adjust(vars.$primary-color, $lightness: 10%);
+  }
+
+  button {
+    // 使用 color.adjust 替代 lighten
+    background-color: color.adjust(vars.$light-background-color, $lightness: 5%);
+  }
+}

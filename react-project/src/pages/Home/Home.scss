@@ -1,0 +1,36 @@
+// 替换 @import 为 @use，并指定命名空间为 vars
+@use './../styles/variables.scss' as vars;
+
+.home-layout {
+  min-height: 100vh;
+}
+
+.header {
+  .system-name {
+    color: white;
+    // 通过命名空间访问变量
+    font-size: vars.$font-size-medium;
+    float: left;
+  }
+
+  .username {
+    color: white;
+    // 通过命名空间访问变量
+    font-size: vars.$font-size-normal;
+    float: right;
+  }
+}
+
+.sider-menu {
+  .ant-menu {
+    // 通过命名空间访问变量
+    background-color: darken(vars.$background-color, 10%);
+  }
+}
+
+.content-area {
+  background: #fff;
+  // 通过命名空间访问变量
+  padding: vars.$spacing-large;
+  min-height: 280px;
+}

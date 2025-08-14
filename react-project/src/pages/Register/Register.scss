@@ -1,0 +1,68 @@
+// 定义更多的变量，方便统一管理样式
+$background-color: #f0f2f5;
+$primary-color: #1890ff;
+$text-color: rgba(0, 0, 0, 0.85);
+$secondary-text-color: rgba(0, 0, 0, 0.45);
+$form-item-margin: 24px;
+$button-height: 40px;
+$button-font-size: 16px;
+$border-radius: 8px;
+$box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+$transition-duration: 0.3s;
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: $background-color;
+  // 确保背景覆盖整个视口
+  width: 100vw;
+
+  .system-name {
+    margin-bottom: $form-item-margin;
+    color: $primary-color;
+    text-align: center;
+  }
+
+  .register-form {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 32px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+
+    .ant-form-item {
+      margin-bottom: $form-item-margin;
+
+      // 输入框聚焦样式
+      .ant-input:focus,
+      .ant-input-password:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      }
+    }
+
+    .ant-btn-primary {
+      height: $button-height;
+      font-size: $button-font-size;
+      transition: opacity $transition-duration ease;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+
+    // 表单项标签样式
+    .ant-form-item-label label {
+      color: $text-color;
+    }
+
+    // 错误提示信息样式
+    .ant-form-item-explain-error {
+      color: #ff4d4f;
+    }
+  }
+}

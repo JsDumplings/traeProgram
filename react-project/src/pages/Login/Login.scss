@@ -1,0 +1,57 @@
+@use './../../styles/variables.scss' as vars;
+@use 'sass:color';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.login-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// 标题与表单间距调整（增加标题底部边距）
+.system-name {
+  margin-bottom: 2rem; // 可根据实际需求调整数值（如 30px/2.5rem 等）
+}
+
+// 表单背景与边框优化
+.login-form {
+  background: #ffffff; // 白色背景
+  border: 1px solid #e5e7eb; // 浅灰色细边框
+  border-radius: 8px; // 圆角边框
+  padding: 2rem; // 增加内边距避免内容贴边
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); // 轻微阴影提升层次感
+
+  .ant-form-item-label label {
+    color: vars.$light-text-color;
+  }
+
+  .ant-input,
+  .ant-input-password {
+    background-color: #fff;
+    border-color: #d9d9d9;
+    color: vars.$light-text-color;
+    width: 350px; // 新增：设置输入框宽度为350px
+
+    &:focus {
+      border-color: vars.$primary-color;
+      box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+    }
+  }
+
+  .ant-btn-primary {
+    background-color: vars.$primary-color;
+    border-color: vars.$primary-color;
+
+    &:hover {
+      background-color: color.adjust(vars.$primary-color, $lightness: 10%);
+      border-color: color.adjust(vars.$primary-color, $lightness: 10%);
+    }
+  }
+}
