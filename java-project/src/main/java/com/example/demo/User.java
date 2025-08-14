@@ -16,6 +16,16 @@ public class User {
     private String username;
     private String password;
 
+    // 构造函数
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    // getter和setter
     public Long getId() {
         return id;
     }

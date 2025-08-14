@@ -1,19 +1,31 @@
 package com.example.demo;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
 public class UserService {
-    // 模拟数据库存储用户名和密码
-    private static final Map<String, String> userDatabase = new HashMap<>();
+    // 注入UserRepository
+    @Autowired
+    private UserRepository userRepository;
 
     // 注册用户
-    public static void registerUser(String username, String password) {
-        userDatabase.put(username, password);
+    public void registerUser(String username, String password) {
+        User user = new User(username, password);
+        userRepository.save(user);
+        System.out.println("用户注册成功: " + username);
     }
 
     // 验证用户密码
-    public static boolean verifyUser(String username, String decryptedPassword) {
-        String storedPassword = userDatabase.get(username);
-        return storedPassword != null && storedPassword.equals(decryptedPassword);
+    public boolean verifyUser(String username, String decryptedPassword) {
+        User user = userRepository.findByUsername(username);
+        System.out.println("查询到用户: " + (user != null ? user.getUsername() : "不存在"));
+
+        if (user != null) {
+            boolean isMatch = user.getPassword().equals(decryptedPassword);
+            System.out.println("密码验证: " + (isMatch ? "成功" : "失败"));
+            return isMatch;
+        }
+        return false;
     }
 }
