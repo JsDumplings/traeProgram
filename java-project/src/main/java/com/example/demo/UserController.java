@@ -20,28 +20,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private static final String PRIVATE_KEY = getPrivateKey();
-    private static String PUBLIC_KEY; // 存储公钥
 
-    // 生成密钥对
-    private static String getPrivateKey() {
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PrivateKey privateKey = keyPair.getPrivate();
-            PUBLIC_KEY = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-            return Base64.getEncoder().encodeToString(privateKey.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
     // 获取公钥的接口
     @GetMapping("/public-key")
-    public String getPublicKey() {
-        return "-----BEGIN PUBLIC KEY-----.\n" + PUBLIC_KEY + "\n-----END PUBLIC KEY-----";
+    public String getPublicKey() throws NoSuchAlgorithmException {
+        KeyPair generateKeyPair = RSAUtil.generateKeyPair();
+        String publicKeyBase64 = Base64.getEncoder().encodeToString(
+                generateKeyPair.getPublic().getEncoded());
+        RSAUtil.PUBLIC_KEY = generateKeyPair.getPublic();
+        RSAUtil.PRIVATE_KEY = generateKeyPair.getPrivate();
+        return "-----BEGIN PUBLIC KEY-----\n" +
+                RSAUtil.formatBase64WithNewlines(publicKeyBase64) +
+                "\n-----END PUBLIC KEY-----";
     }
 
     // 登录接口
@@ -51,7 +42,7 @@ public class UserController {
         String password = request.get("password");
         try {
             // 解密前端传来的密码
-            String decryptedPassword = RSAUtil.decrypt(password, PRIVATE_KEY);
+            String decryptedPassword = RSAUtil.decrypt(password, RSAUtil.PRIVATE_KEY);
             System.out.println("decryptedPassword: " + decryptedPassword);
 
             boolean isVerified = userService.verifyUser(username, decryptedPassword);
@@ -75,7 +66,7 @@ public class UserController {
         String password = request.get("password");
         try {
             // 解密前端传来的密码
-            String decryptedPassword = RSAUtil.decrypt(password, PRIVATE_KEY);
+            String decryptedPassword = RSAUtil.decrypt(password, RSAUtil.PRIVATE_KEY);
             userService.registerUser(username, decryptedPassword);
             return "注册成功";
         } catch (Exception e) {

@@ -6,7 +6,7 @@ import './Register.scss';
 
 const { Title } = Typography;
 
-const Register: React.FC = () => { 
+const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -31,11 +31,7 @@ const Register: React.FC = () => {
       <Form 
         onFinish={onFinish} 
         className="register-form"
-        layout="vertical" 
-        style={{ 
-          maxWidth: 400, 
-          margin: '0 auto' 
-        }} 
+        layout="vertical"
       >
         <Form.Item
           name="username"

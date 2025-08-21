@@ -1,14 +1,21 @@
-// 定义更多的变量，方便统一管理样式
-$background-color: #f0f2f5;
-$primary-color: #1890ff;
-$text-color: rgba(0, 0, 0, 0.85);
-$secondary-text-color: rgba(0, 0, 0, 0.45);
-$form-item-margin: 24px;
-$button-height: 40px;
-$button-font-size: 16px;
-$border-radius: 8px;
-$box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-$transition-duration: 0.3s;
+// 现代化的变量定义
+$background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$card-background: #ffffff;
+$primary-color: #667eea;
+$primary-hover: #764ba2;
+$text-primary: #2c3e50;
+$text-secondary: #7f8c8d;
+$success-color: #00b894;
+$error-color: #ff6b6b;
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// 响应式断点
+$mobile: 480px;
+$tablet: 768px;
 
 .register-container {
   display: flex;
@@ -16,53 +23,129 @@ $transition-duration: 0.3s;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: $background-color;
-  // 确保背景覆盖整个视口
+  background: $background-gradient;
   width: 100vw;
+  padding: 20px;
+  box-sizing: border-box;
+
+  // 动画背景装饰
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+  }
 
   .system-name {
-    margin-bottom: $form-item-margin;
-    color: $primary-color;
+    margin-bottom: 40px;
+    color: white;
     text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    @media (max-width: $mobile) {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
   }
 
   .register-form {
     width: 100%;
-    max-width: 400px;
-    background-color: #fff;
-    padding: 32px;
+    max-width: 420px;
+    background: $card-background;
+    padding: 48px 40px;
     border-radius: $border-radius;
-    box-shadow: $box-shadow;
+    box-shadow: $shadow-lg;
+    backdrop-filter: blur(10px);
+    // border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideUp 0.6s ease-out;
+    
+    @media (max-width: $mobile) {
+      padding: 32px 24px;
+      margin: 0 10px;
+    }
 
     .ant-form-item {
-      margin-bottom: $form-item-margin;
+      margin-bottom: 24px;
 
-      // 输入框聚焦样式
-      .ant-input:focus,
-      .ant-input-password:focus {
-        border-color: $primary-color;
-        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      &-label {
+        padding-bottom: 8px;
+        
+        label {
+          color: $text-primary;
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+
+      // 输入框样式优化
+      .ant-input,
+      .ant-input-password {
+        border-radius: $border-radius-sm;
+        border: 1px solid #e1e8ed;
+        padding: 12px 16px;
+        font-size: 16px;
+        transition: $transition;
+        background-color: #fafbfc;
+    
+        &:hover {
+          border-color: $primary-color;
+          background-color: white;
+        }
+    
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          background-color: white;
+        }
+    
+        &::placeholder {
+          color: $text-secondary;
+          opacity: 0.7;
+        }
       }
     }
 
+    // 按钮样式优化
     .ant-btn-primary {
-      height: $button-height;
-      font-size: $button-font-size;
-      transition: opacity $transition-duration ease;
+      width: 100%;
+      height: 48px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: $border-radius-sm;
+      background: linear-gradient(135deg, $primary-color, $primary-hover);
+      border: none;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      transition: $transition;
+      margin-top: 8px;
 
       &:hover {
-        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, $primary-hover, $primary-color);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
       }
     }
+  }
+}
 
-    // 表单项标签样式
-    .ant-form-item-label label {
-      color: $text-color;
-    }
-
-    // 错误提示信息样式
-    .ant-form-item-explain-error {
-      color: #ff4d4f;
-    }
+// 动画定义
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -1,29 +1,33 @@
 package com.example.demo;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import javax.crypto.Cipher;
 
 public class RSAUtil {
+    // 存储公钥
+    public static PublicKey PUBLIC_KEY;
+    // 存储私钥
+    public static PrivateKey PRIVATE_KEY;
+    // 生成密钥对
+    public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        System.out.println("publicKey:" + Base64.getEncoder().encodeToString(
+                keyPairGenerator.generateKeyPair().getPublic().getEncoded()));
+        System.out.println("privateKey:" + Base64.getEncoder().encodeToString(
+                keyPairGenerator.generateKeyPair().getPrivate().getEncoded()));
+        return keyPairGenerator.generateKeyPair();
+    }
     // 私钥解密方法
-    public static String decrypt(String encryptedData, String privateKeyStr) throws Exception {
+    public static String decrypt(String encryptedData, PrivateKey privateKeyStr) throws Exception {
         try {
-            // 将Base64编码的私钥字符串转换为PrivateKey对象
-            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyStr);
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-        
-            // 初始化Cipher对象进行解密
-            // 明确指定填充模式
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-        
-            return new String(decryptedBytes);
+            cipher.init(Cipher.DECRYPT_MODE, privateKeyStr);
+            byte[] decodedBytes = Base64.getDecoder().decode(encryptedData);
+            byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+            return new String(decryptedBytes, "UTF-8");
         } catch (Exception e) {
             System.err.println("解密失败: " + e.getMessage());
             e.printStackTrace();
@@ -41,15 +45,21 @@ public class RSAUtil {
         // 明确指定填充模式
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
+        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes("UTF-8"));
 
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static void testKeyPair(String publicKey, String privateKey) throws Exception {
-        String testData = "123456";
-        String encrypted = encrypt(testData, publicKey);
-        String decrypted = decrypt(encrypted, privateKey);
-        System.out.println("密钥对测试: " + (testData.equals(decrypted) ? "成功" : "失败"));
+    // 格式化Base64字符串（每64字符换行）
+    public static String formatBase64WithNewlines(String base64) {
+        StringBuilder formatted = new StringBuilder();
+        for (int i = 0; i < base64.length(); i += 64) {
+            int end = Math.min(i + 64, base64.length());
+            formatted.append(base64.substring(i, end));
+            if (end < base64.length()) {
+                formatted.append("\n");
+            }
+        }
+        return formatted.toString();
     }
 }
